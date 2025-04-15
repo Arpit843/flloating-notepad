@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Floating NPad</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-app-region: drag;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      color: #222;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      resize: none;
+      box-sizing: border-box;
+      outline: none;
+      -webkit-app-region: no-drag;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="notepad" placeholder="Start typing..."></textarea>
+
+  <script>
+    const textarea = document.getElementById('notepad');
+
+    textarea.value = localStorage.getItem('note') || '';
+
+    textarea.addEventListener('input', () => {
+      localStorage.setItem('note', textarea.value);
+    });
+
+    console.log("TextArea loaded, current note:", textarea.value);
+  </script>
+</body>
+</html>
