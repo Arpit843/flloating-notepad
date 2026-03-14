@@ -1,6 +1,6 @@
 # ✦ Floating Notepad
 
-A minimal, always-on-top notepad that lives above all your other windows. Built with Electron — transparent, frameless, and out of your way.
+A minimal, always on top notepad that lives above all your other windows. Built with Electron transparent, frameless, and out of your way.
 
 ![Electron](https://img.shields.io/badge/Electron-latest-47848F?logo=electron&logoColor=white)
 ![License](https://img.shields.io/badge/license-ISC-lightgrey)
@@ -10,7 +10,7 @@ A minimal, always-on-top notepad that lives above all your other windows. Built 
 ## Features
 
 - **Always on top** — floats above every other window; toggle with the pin button
-- **Multiple tabs** — keep separate notes open at once, rename them by double-clicking
+- **Multiple tabs** — keep separate notes open at once, rename them by double clicking
 - **Auto-save** — notes persist automatically via `localStorage`; no files to manage
 - **Dark & light themes** — toggle with the sun/moon button; preference is remembered
 - **Adjustable font size** — `A+` / `A−` controls in the status bar
@@ -41,7 +41,7 @@ npm install
 npm start
 ```
 
-The notepad will open in the top-right corner of your screen.
+The notepad will open in the top right corner of your screen.
 
 ---
 
@@ -76,9 +76,9 @@ floating-notepad/
 
 **State management** — all notes, tab labels, font size, and theme are stored as a single JSON object in `localStorage` under the key `floating-notepad-v3`. State is read on startup and written automatically 800 ms after the last keystroke (debounced).
 
-**IPC** — the renderer sends messages to the main process via Electron's `ipcRenderer`/`ipcMain` for actions that require OS-level access: closing the window, minimising, and toggling always-on-top. The current pin state is sent back to the renderer so the button reflects reality.
+**IPC** the renderer sends messages to the main process via Electron's `ipcRenderer`/`ipcMain` for actions that require OS-level access: closing the window, minimising, and toggling always on top. The current pin state is sent back to the renderer so the button reflects reality.
 
-**Theming** — a single `.light` class on `<body>` switches a set of CSS custom properties. Everything else adapts automatically — no duplicated rules.
+**Theming** a single `.light` class on `<body>` switches a set of CSS custom properties. Everything else adapts automatically no duplicated rules.
 
 ---
 
@@ -112,8 +112,8 @@ mainWindow = new BrowserWindow({
 Use [electron-forge](https://www.electronforge.io/) to package the app into an `.exe`, `.dmg`, or `.AppImage`.
 
 ```bash
-npm install --save-dev @electron-forge/cli
-npx electron-forge import
+npm install save dev @electron-forge/cli
+npx electron forge import
 npm run make
 ```
 
@@ -121,4 +121,4 @@ npm run make
 
 ## License
 
-ISC — do whatever you like with it.
+ISC: do whatever you like with it.
