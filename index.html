@@ -3,46 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Floating NPad</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      -webkit-app-region: drag;
-    }
-
-    textarea {
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      color: #222;
-      border: none;
-      padding: 10px;
-      font-size: 16px;
-      resize: none;
-      box-sizing: border-box;
-      outline: none;
-      -webkit-app-region: no-drag;
-    }
-  </style>
+  <title>Floating Notepad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <textarea id="notepad" placeholder="Start typing..."></textarea>
+  <div id="app">
 
-  <script>
-    const textarea = document.getElementById('notepad');
+    <!-- Titlebar -->
+    <div id="titlebar">
+      <div id="drag-region">
+        <span id="app-icon">✦</span>
+        <span id="app-title">notepad</span>
+      </div>
+      <div id="controls">
+        <button id="btn-pin" title="Toggle always on top" class="active">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+            <path d="M9.5 1L15 6.5L11 8L8 11L6.5 15L5 10L1 8.5L5 5L9.5 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button id="btn-theme" title="Toggle theme">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 1v1.5M8 13.5V15M15 8h-1.5M2.5 8H1M12.95 3.05l-1.06 1.06M4.11 11.89l-1.06 1.06M12.95 12.95l-1.06-1.06M4.11 4.11L3.05 3.05" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button id="btn-minimize" title="Minimize">
+          <svg width="12" height="8" viewBox="0 0 12 2" fill="none">
+            <path d="M1 1H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button id="btn-close" title="Close">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <path d="M1 1L10 10M10 1L1 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
 
-    textarea.value = localStorage.getItem('note') || '';
+    <!-- Tabs -->
+    <div id="tabs-bar">
+      <div id="tabs-list"></div>
+      <button id="btn-new-tab" title="New note">+</button>
+    </div>
 
-    textarea.addEventListener('input', () => {
-      localStorage.setItem('note', textarea.value);
-    });
+    <!-- Editor -->
+    <div id="editor-wrap">
+      <textarea id="notepad" placeholder="start writing…" spellcheck="true"></textarea>
+    </div>
 
-    console.log("TextArea loaded, current note:", textarea.value);
-  </script>
+    <!-- Status bar -->
+    <div id="statusbar">
+      <span id="save-status">saved</span>
+      <span id="stats"></span>
+      <div id="font-controls">
+        <button id="btn-font-down" title="Decrease font size">A−</button>
+        <button id="btn-font-up" title="Increase font size">A+</button>
+      </div>
+    </div>
+
+  </div>
+  <script src="renderer.js"></script>
 </body>
 </html>
