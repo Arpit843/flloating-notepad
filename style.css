@@ -1,28 +1,259 @@
-/* Basic styles for the floating notepad */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #fff8b0;
-    overflow: hidden;
+/* ─── Reset & Variables ──────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: rgba(18, 16, 22, 0.82);
+  --surface: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.08);
+  --text: #e8e0f0;
+  --text-muted: rgba(232,224,240,0.38);
+  --accent: #c8a96e;
+  --accent-dim: rgba(200,169,110,0.18);
+  --danger: #e06c75;
+  --titlebar-h: 38px;
+  --tabs-h: 32px;
+  --status-h: 28px;
+  --radius: 12px;
+  --font-editor: 'DM Mono', monospace;
+  --font-ui: 'DM Sans', sans-serif;
+  --font-size: 14px;
+  --shadow: 0 24px 64px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.35);
 }
 
-#notepad-container {
-    width: 300px;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body.light {
+  --bg: rgba(250, 247, 240, 0.90);
+  --surface: rgba(0,0,0,0.03);
+  --border: rgba(0,0,0,0.08);
+  --text: #2a2218;
+  --text-muted: rgba(42,34,24,0.4);
+  --accent: #9a6e30;
+  --accent-dim: rgba(154,110,48,0.12);
+}
+
+/* ─── App Shell ─────────────────────────────────────── */
+html, body { width: 100%; height: 100%; background: transparent; }
+
+#app {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  font-family: var(--font-ui);
+  color: var(--text);
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ─── Titlebar ──────────────────────────────────────── */
+#titlebar {
+  height: var(--titlebar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 14px;
+  -webkit-app-region: drag;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+#drag-region {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  -webkit-app-region: drag;
+}
+
+#app-icon { color: var(--accent); font-size: 13px; line-height: 1; }
+#app-title {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: var(--text-muted);
+}
+
+#controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  -webkit-app-region: no-drag;
+}
+
+#controls button {
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+#controls button:hover { background: var(--accent-dim); color: var(--text); }
+#controls button.active { color: var(--accent); }
+#btn-close:hover { background: rgba(224,108,117,0.15); color: var(--danger); }
+
+/* ─── Tabs ──────────────────────────────────────────── */
+#tabs-bar {
+  height: var(--tabs-h);
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  gap: 2px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+#tabs-bar::-webkit-scrollbar { display: none; }
+
+#tabs-list { display: flex; gap: 2px; }
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+  -webkit-app-region: no-drag;
+  border: 1px solid transparent;
+  position: relative;
+}
+.tab:hover { background: var(--surface); color: var(--text); }
+.tab.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-color: rgba(200,169,110,0.25);
+}
+
+.tab-close {
+  opacity: 0;
+  font-size: 13px;
+  line-height: 1;
+  padding: 0 1px;
+  margin-left: 2px;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+.tab:hover .tab-close { opacity: 0.6; }
+.tab-close:hover { opacity: 1 !important; }
+
+#btn-new-tab {
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+}
+#btn-new-tab:hover { background: var(--accent-dim); color: var(--accent); }
+
+/* ─── Editor ────────────────────────────────────────── */
+#editor-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
 }
 
 #notepad {
-    width: 90%;
-    height: 90%;
-    border: none;
-    resize: none;
-    background-color: #fff;
-    padding: 10px;
-    font-size: 16px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    outline: none;
-    border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  color: var(--text);
+  border: none;
+  padding: 14px 16px;
+  font-family: var(--font-editor);
+  font-size: var(--font-size);
+  font-weight: 300;
+  line-height: 1.7;
+  resize: none;
+  outline: none;
+  -webkit-app-region: no-drag;
+  caret-color: var(--accent);
+  letter-spacing: 0.01em;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
+#notepad::-webkit-scrollbar { width: 4px; }
+#notepad::-webkit-scrollbar-track { background: transparent; }
+#notepad::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+#notepad::placeholder { color: var(--text-muted); font-style: italic; }
+
+/* ─── Status Bar ────────────────────────────────────── */
+#statusbar {
+  height: var(--status-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-size: 10px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--surface);
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+
+#save-status {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  transition: color 0.3s;
+}
+#save-status.saving { color: var(--accent); }
+#save-status.saved  { color: var(--text-muted); }
+
+#stats { flex: 1; text-align: center; font-variant-numeric: tabular-nums; }
+
+#font-controls {
+  display: flex;
+  gap: 3px;
+}
+#font-controls button {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 9.5px;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  padding: 2px 5px;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+#font-controls button:hover { background: var(--accent-dim); color: var(--accent); }
